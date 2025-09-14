@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kodluyoruz4/ result_page.dart';
 
 void main() {
   runApp(MaterialApp(home: KisilikAnketi(), debugShowCheckedModeBanner: false));
@@ -121,12 +122,31 @@ class _KisilikAnketiState extends State<KisilikAnketi> {
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   onPressed: () {
-                    String mesaj =
-                        "Ad Soyad: ${_adSoyadController.text}\nCinsiyet: $_cinsiyet\nReşit mi: $_resitMi\nSigara Kullanıyor mu: $_sigaraKullaniyorMu\nGünde Sigara: ${_sigaraSayisi.round()}";
-                    ScaffoldMessenger.of(
+                    if (_adSoyadController.text.isEmpty || _cinsiyet == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Lütfen ad soyad ve cinsiyetinizi girin.",
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+
+                    Navigator.push(
                       context,
-                    ).showSnackBar(SnackBar(content: Text(mesaj)));
+                      MaterialPageRoute(
+                        builder: (context) => ResultPage(
+                          name: _adSoyadController.text,
+                          gender: _cinsiyet,
+                          isAdult: _resitMi,
+                          smokes: _sigaraKullaniyorMu,
+                          cigarettesPerDay: _sigaraSayisi.round(),
+                        ),
+                      ),
+                    );
                   },
+
                   child: Text(
                     "Bilgileri gönder",
                     style: TextStyle(color: Colors.white, fontSize: 18),
